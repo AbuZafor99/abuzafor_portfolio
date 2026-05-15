@@ -1,0 +1,23 @@
+// Particles Background
+(function(){var c=document.getElementById('particles-bg'),ctx=c.getContext('2d'),pts=[];function rs(){c.width=innerWidth;c.height=innerHeight;}rs();addEventListener('resize',rs);function P(){this.x=Math.random()*c.width;this.y=Math.random()*c.height;this.sz=Math.random()*1.5+.5;this.sx=(Math.random()-.5)*.3;this.sy=(Math.random()-.5)*.3;this.op=Math.random()*.4+.1;}P.prototype.up=function(){this.x+=this.sx;this.y+=this.sy;if(this.x<0)this.x=c.width;if(this.x>c.width)this.x=0;if(this.y<0)this.y=c.height;if(this.y>c.height)this.y=0;};P.prototype.dr=function(){ctx.beginPath();ctx.arc(this.x,this.y,Math.max(.1,this.sz),0,Math.PI*2);ctx.fillStyle='rgba(0,229,160,'+this.op+')';ctx.fill();};var n=innerWidth<768?25:50;for(var i=0;i<n;i++)pts.push(new P());function ln(){for(var i=0;i<pts.length;i++)for(var j=i+1;j<pts.length;j++){var dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<90){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle='rgba(0,229,160,'+(1-d/90)*.06+')';ctx.lineWidth=.5;ctx.stroke();}}}function an(){ctx.clearRect(0,0,c.width,c.height);pts.forEach(function(p){p.up();p.dr();});ln();requestAnimationFrame(an);}if(!matchMedia('(prefers-reduced-motion:reduce)').matches)an();})();
+
+// 3D Tilt on Project Cards
+document.querySelectorAll('[data-tilt]').forEach(function(c){c.addEventListener('mousemove',function(e){var r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform='perspective(800px) rotateY('+x*8+'deg) rotateX('+(-y*8)+'deg) translateZ(6px)';});c.addEventListener('mouseleave',function(){c.style.transform='';});});
+
+// Navbar Active State & Shadow
+(function(){var nb=document.getElementById('navbar'),nls=document.querySelectorAll('.nav-links a'),secs=document.querySelectorAll('section');addEventListener('scroll',function(){nb.classList.toggle('scrolled',scrollY>50);var cur='';secs.forEach(function(s){if(scrollY>=s.offsetTop-100)cur=s.id;});nls.forEach(function(l){l.classList.toggle('active',l.getAttribute('href')==='#'+cur);});});})();
+
+// Mobile Menu
+(function(){var h=document.getElementById('hamburger'),m=document.getElementById('mobMenu'),o=false;h.addEventListener('click',function(){o=!o;m.classList.toggle('open',o);h.children[0].style.transform=o?'rotate(45deg) translate(5px,5px)':'';h.children[1].style.opacity=o?'0':'';h.children[2].style.transform=o?'rotate(-45deg) translate(5px,-5px)':'';});m.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){o=false;m.classList.remove('open');h.children[0].style.transform='';h.children[1].style.opacity='';h.children[2].style.transform='';});});})();
+
+// Scroll Reveal
+(function(){var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.1,rootMargin:'0px 0px -50px 0px'});document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});})();
+
+// Experience Counter
+(function(){var sd=new Date(2025,8,1),nw=new Date(),df=nw-sd,dd=Math.floor(df/(1e3*60*60*24)),mo=Math.floor(dd/30.44),rd=Math.floor(dd-mo*30.44),el=document.getElementById('expCounter'),lb=document.getElementById('expLabel');if(mo<12){el.dataset.target=mo;lb.textContent='Months Experience';if(rd>15)el.dataset.target=mo+1;}else{var yr=Math.floor(mo/12),rm=mo%12;el.dataset.target=yr;if(rm>0)lb.textContent='Years '+rm+'+ Months Experience';else lb.textContent='Years Experience';}var done=new Set();var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting&&!done.has(e.target)){done.add(e.target);var t=parseInt(e.target.dataset.target),c=0,s=Math.max(1,t/60);(function cnt(){c+=s;if(c>=t)e.target.textContent=t+(e.target.id==='expCounter'?'+':'');else{e.target.textContent=Math.floor(c);requestAnimationFrame(cnt);}})();}});},{threshold:0.5});document.querySelectorAll('.sc-num[data-target]').forEach(function(c){obs.observe(c);});})();
+
+// Scroll Progress Bar
+(function(){var b=document.getElementById('scrollBar');addEventListener('scroll',function(){var s=scrollY,t=document.documentElement.scrollHeight-innerHeight;b.style.width=(s/t*100)+'%';});})();
+
+// Smooth Scroll
+document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){var href=this.getAttribute('href');if(href==='#')return;e.preventDefault();var t=document.querySelector(href);if(t)t.scrollIntoView({behavior:'smooth',block:'start'});});});
