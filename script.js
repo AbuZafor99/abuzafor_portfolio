@@ -1,12 +1,13 @@
 // Interactive Background: dense ambient glitter that trails the cursor
-// and ripples outward like water — with a decaying multi-ring "splash" and
-// a perspective squash so the click wave reads as 3D, not a flat circle.
+// and, on click, a real water-drop moment — droplets burst up and fall
+// with gravity (actual vertical motion reads as 3D far better than a flat
+// circle), then organic wavy, directionally-shaded rings settle outward.
 (function(){
   var c=document.getElementById('particles-bg');
   if(!c)return;
   var ctx=c.getContext('2d');
   var reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
-  var pts=[],ripples=[],flashes=[];
+  var pts=[],ripples=[],flashes=[],droplets=[];
   var mouse={x:-9999,y:-9999,active:false};
 
   function rs(){c.width=innerWidth;c.height=innerHeight;}
@@ -50,7 +51,7 @@
     ctx.fillStyle='rgba(0,229,160,'+op+')';ctx.fill();
   };
 
-  var n=innerWidth<768?60:120;
+  var n=innerWidth<768?90:190;
   for(var i=0;i<n;i++)pts.push(new P());
 
   function ln(){
@@ -63,17 +64,60 @@
     }
   }
 
-  // A single splash = 3 staggered rings that decelerate as they expand
-  // (real ripples lose energy), squashed vertically for a 3D "looking down
-  // at water" angle, each with a bright leading edge and a soft dark
-  // underside to sell the curvature.
+  // The click "drop": a burst of droplets shoot up and outward then fall
+  // back with gravity — real vertical motion is what actually reads as 3D —
+  // followed by 3 staggered, decelerating rings that settle outward.
   function spawnRipple(x,y){
     if(ripples.length>9)ripples.splice(0,ripples.length-9);
     for(var k=0;k<3;k++){
-      ripples.push({x:x,y:y,radius:0,wait:k*5,speed:3.6-k*.5,life:50+k*10,maxLife:50+k*10,baseStrength:1.8-k*.5,strength:1.8-k*.5});
+      ripples.push({x:x,y:y,radius:0,wait:k*5,speed:3.6-k*.5,life:54+k*10,maxLife:54+k*10,baseStrength:1.8-k*.5,strength:1.8-k*.5,seed:Math.random()*10});
     }
     if(flashes.length>3)flashes.shift();
     flashes.push({x:x,y:y,life:16,maxLife:16});
+
+    if(droplets.length>60)droplets.splice(0,droplets.length-60);
+    var dc=12;
+    for(var d=0;d<dc;d++){
+      var ang=(Math.PI*2*d/dc)+(Math.random()-.5)*.5;
+      var spd=1.3+Math.random()*1.7;
+      droplets.push({
+        x:x,y:y,
+        vx:Math.cos(ang)*spd,
+        vy:Math.sin(ang)*spd*.4-2.4-Math.random()*1.3,
+        life:0,maxLife:24+Math.random()*10,
+        sz:.8+Math.random()*1.3
+      });
+    }
+  }
+
+  function updateDroplets(){
+    for(var i=droplets.length-1;i>=0;i--){
+      var dp=droplets[i];
+      dp.vy+=.2;
+      dp.x+=dp.vx;dp.y+=dp.vy;
+      dp.life++;
+      if(dp.life>=dp.maxLife){droplets.splice(i,1);continue;}
+      var a=1-dp.life/dp.maxLife;
+      ctx.beginPath();ctx.arc(dp.x,dp.y,Math.max(.1,dp.sz*a+.3),0,Math.PI*2);
+      ctx.fillStyle='rgba(190,255,235,'+(a*.85)+')';
+      ctx.fill();
+    }
+  }
+
+  // organic wavy ring (not a perfect circle) with directional shading so it
+  // reads as a raised, lit surface rather than a flat drawn line
+  function ringPath(x,y,radius,squash,wob,seed,inset){
+    radius=Math.max(0,radius-inset);
+    var steps=40;
+    ctx.beginPath();
+    for(var s=0;s<=steps;s++){
+      var ang=(s/steps)*Math.PI*2;
+      var rad=radius+Math.sin(ang*3+seed)*wob;
+      var px=x+Math.cos(ang)*rad;
+      var py=y+Math.sin(ang)*rad*squash;
+      if(s===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);
+    }
+    ctx.closePath();
   }
 
   function drawRipples(){
@@ -84,15 +128,23 @@
       r.speed*=.985;
       r.life--;
       if(r.life<=0){ripples.splice(i,1);continue;}
-      var a=Math.max(0,r.life/r.maxLife)*.4;
+      var a=Math.max(0,r.life/r.maxLife)*.42;
       r.strength=r.baseStrength*(r.life/r.maxLife);
-      var ry=r.radius*.55;
-      ctx.beginPath();ctx.ellipse(r.x,r.y+2,r.radius,ry,0,0,Math.PI*2);
-      ctx.strokeStyle='rgba(0,0,0,'+(a*.3)+')';ctx.lineWidth=2.2;ctx.stroke();
-      ctx.beginPath();ctx.ellipse(r.x,r.y,r.radius,ry,0,0,Math.PI*2);
+      var age=1-r.life/r.maxLife;
+      var squash=.38+.2*age;
+      var wob=Math.min(3,r.radius*.05);
+
+      ringPath(r.x,r.y+2.5,r.radius,squash,wob,r.seed,0);
+      ctx.strokeStyle='rgba(0,0,0,'+(a*.35)+')';ctx.lineWidth=2;ctx.stroke();
+
+      ringPath(r.x,r.y,r.radius,squash,wob,r.seed,0);
       ctx.strokeStyle='rgba(0,229,160,'+a+')';ctx.lineWidth=1.6;ctx.stroke();
-      ctx.beginPath();ctx.ellipse(r.x,r.y,Math.max(0,r.radius-10),Math.max(0,ry-6),0,0,Math.PI*2);
-      ctx.strokeStyle='rgba(77,195,255,'+(a*.55)+')';ctx.lineWidth=1;ctx.stroke();
+
+      ringPath(r.x-1,r.y-1,r.radius,squash,wob*.6,r.seed,10);
+      ctx.strokeStyle='rgba(190,255,235,'+(a*.7)+')';ctx.lineWidth=1;ctx.stroke();
+
+      ringPath(r.x,r.y,r.radius,squash,wob*.6,r.seed+2,20);
+      ctx.strokeStyle='rgba(77,195,255,'+(a*.45)+')';ctx.lineWidth=1;ctx.stroke();
     }
   }
 
@@ -100,10 +152,10 @@
     for(var i=flashes.length-1;i>=0;i--){
       var f=flashes[i];f.life--;
       if(f.life<=0){flashes.splice(i,1);continue;}
-      var a=f.life/f.maxLife,rad=18*a+2;
+      var a=f.life/f.maxLife,rad=20*a+2;
       var g=ctx.createRadialGradient(f.x,f.y,0,f.x,f.y,rad);
-      g.addColorStop(0,'rgba(255,255,255,'+(.5*a)+')');
-      g.addColorStop(.4,'rgba(0,229,160,'+(.35*a)+')');
+      g.addColorStop(0,'rgba(255,255,255,'+(.6*a)+')');
+      g.addColorStop(.4,'rgba(0,229,160,'+(.4*a)+')');
       g.addColorStop(1,'rgba(0,229,160,0)');
       ctx.beginPath();ctx.arc(f.x,f.y,rad,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
     }
@@ -118,7 +170,7 @@
   function an(){
     ctx.clearRect(0,0,c.width,c.height);
     pts.forEach(function(p){p.up();p.dr();});
-    ln();drawRipples();drawFlashes();
+    ln();drawRipples();updateDroplets();drawFlashes();
     requestAnimationFrame(an);
   }
   if(!reduced)an();else pts.forEach(function(p){p.dr();});
