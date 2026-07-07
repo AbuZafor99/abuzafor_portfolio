@@ -1,11 +1,12 @@
-// Interactive Background: ambient glitter that drifts, drags gently toward
-// the cursor when nearby, and ripples outward like water when clicked.
+// Interactive Background: dense ambient glitter that trails the cursor
+// and ripples outward like water — with a decaying multi-ring "splash" and
+// a perspective squash so the click wave reads as 3D, not a flat circle.
 (function(){
   var c=document.getElementById('particles-bg');
   if(!c)return;
   var ctx=c.getContext('2d');
   var reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
-  var pts=[],ripples=[];
+  var pts=[],ripples=[],flashes=[];
   var mouse={x:-9999,y:-9999,active:false};
 
   function rs(){c.width=innerWidth;c.height=innerHeight;}
@@ -21,57 +22,91 @@
     this.vx=this.bvx;
     this.vy=this.bvy;
     this.op=Math.random()*.45+.12;
+    this.boost=0;
   }
   P.prototype.up=function(){
     if(mouse.active){
-      var dx=mouse.x-this.x,dy=mouse.y-this.y,d=Math.sqrt(dx*dx+dy*dy),r=160;
-      if(d<r&&d>.01){var pull=(1-d/r)*.045;this.vx+=(dx/d)*pull;this.vy+=(dy/d)*pull;}
+      var dx=mouse.x-this.x,dy=mouse.y-this.y,d=Math.sqrt(dx*dx+dy*dy),r=220;
+      if(d<r&&d>.01){
+        var t=1-d/r,pull=t*t*.14;
+        this.vx+=(dx/d)*pull;this.vy+=(dy/d)*pull;
+        if(t>this.boost)this.boost=t;
+      }
     }
     for(var i=0;i<ripples.length;i++){
       var rp=ripples[i],dx2=this.x-rp.x,dy2=this.y-rp.y,d2=Math.sqrt(dx2*dx2+dy2*dy2),edge=Math.abs(d2-rp.radius);
-      if(edge<28){var f=(1-edge/28)*rp.strength;this.vx+=(dx2/(d2||1))*f;this.vy+=(dy2/(d2||1))*f;}
+      if(edge<30){var f=(1-edge/30)*rp.strength;this.vx+=(dx2/(d2||1))*f;this.vy+=(dy2/(d2||1))*f;}
     }
     this.x+=this.vx;this.y+=this.vy;
-    this.vx+=(this.bvx-this.vx)*.02;
-    this.vy+=(this.bvy-this.vy)*.02;
+    this.vx+=(this.bvx-this.vx)*.012;
+    this.vy+=(this.bvy-this.vy)*.012;
+    this.boost*=.94;
     if(this.x<-10)this.x=c.width+10;if(this.x>c.width+10)this.x=-10;
     if(this.y<-10)this.y=c.height+10;if(this.y>c.height+10)this.y=-10;
   };
   P.prototype.dr=function(){
-    ctx.beginPath();ctx.arc(this.x,this.y,Math.max(.1,this.sz),0,Math.PI*2);
-    ctx.fillStyle='rgba(0,229,160,'+this.op+')';ctx.fill();
+    var sz=this.sz+this.boost*2,op=Math.min(1,this.op+this.boost*.6);
+    ctx.beginPath();ctx.arc(this.x,this.y,Math.max(.1,sz),0,Math.PI*2);
+    ctx.fillStyle='rgba(0,229,160,'+op+')';ctx.fill();
   };
 
-  var n=innerWidth<768?30:60;
+  var n=innerWidth<768?60:120;
   for(var i=0;i<n;i++)pts.push(new P());
 
   function ln(){
     for(var i=0;i<pts.length;i++)for(var j=i+1;j<pts.length;j++){
       var dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
-      if(d<90){
+      if(d<85){
         ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
-        ctx.strokeStyle='rgba(0,229,160,'+(1-d/90)*.06+')';ctx.lineWidth=.5;ctx.stroke();
+        ctx.strokeStyle='rgba(0,229,160,'+(1-d/85)*.05+')';ctx.lineWidth=.5;ctx.stroke();
       }
     }
+  }
+
+  // A single splash = 3 staggered rings that decelerate as they expand
+  // (real ripples lose energy), squashed vertically for a 3D "looking down
+  // at water" angle, each with a bright leading edge and a soft dark
+  // underside to sell the curvature.
+  function spawnRipple(x,y){
+    if(ripples.length>9)ripples.splice(0,ripples.length-9);
+    for(var k=0;k<3;k++){
+      ripples.push({x:x,y:y,radius:0,wait:k*5,speed:3.6-k*.5,life:50+k*10,maxLife:50+k*10,baseStrength:1.8-k*.5,strength:1.8-k*.5});
+    }
+    if(flashes.length>3)flashes.shift();
+    flashes.push({x:x,y:y,life:16,maxLife:16});
   }
 
   function drawRipples(){
     for(var i=ripples.length-1;i>=0;i--){
       var r=ripples[i];
-      r.radius+=r.speed;r.life--;
+      if(r.wait>0){r.wait--;continue;}
+      r.radius+=r.speed;
+      r.speed*=.985;
+      r.life--;
       if(r.life<=0){ripples.splice(i,1);continue;}
-      var a=Math.max(0,r.life/r.maxLife)*.35;
+      var a=Math.max(0,r.life/r.maxLife)*.4;
       r.strength=r.baseStrength*(r.life/r.maxLife);
-      ctx.beginPath();ctx.arc(r.x,r.y,r.radius,0,Math.PI*2);
-      ctx.strokeStyle='rgba(0,229,160,'+a+')';ctx.lineWidth=1.4;ctx.stroke();
-      ctx.beginPath();ctx.arc(r.x,r.y,Math.max(0,r.radius-14),0,Math.PI*2);
-      ctx.strokeStyle='rgba(77,195,255,'+(a*.6)+')';ctx.lineWidth=1;ctx.stroke();
+      var ry=r.radius*.55;
+      ctx.beginPath();ctx.ellipse(r.x,r.y+2,r.radius,ry,0,0,Math.PI*2);
+      ctx.strokeStyle='rgba(0,0,0,'+(a*.3)+')';ctx.lineWidth=2.2;ctx.stroke();
+      ctx.beginPath();ctx.ellipse(r.x,r.y,r.radius,ry,0,0,Math.PI*2);
+      ctx.strokeStyle='rgba(0,229,160,'+a+')';ctx.lineWidth=1.6;ctx.stroke();
+      ctx.beginPath();ctx.ellipse(r.x,r.y,Math.max(0,r.radius-10),Math.max(0,ry-6),0,0,Math.PI*2);
+      ctx.strokeStyle='rgba(77,195,255,'+(a*.55)+')';ctx.lineWidth=1;ctx.stroke();
     }
   }
 
-  function spawnRipple(x,y){
-    if(ripples.length>4)ripples.shift();
-    ripples.push({x:x,y:y,radius:4,speed:3.2,life:46,maxLife:46,baseStrength:1.6,strength:1.6});
+  function drawFlashes(){
+    for(var i=flashes.length-1;i>=0;i--){
+      var f=flashes[i];f.life--;
+      if(f.life<=0){flashes.splice(i,1);continue;}
+      var a=f.life/f.maxLife,rad=18*a+2;
+      var g=ctx.createRadialGradient(f.x,f.y,0,f.x,f.y,rad);
+      g.addColorStop(0,'rgba(255,255,255,'+(.5*a)+')');
+      g.addColorStop(.4,'rgba(0,229,160,'+(.35*a)+')');
+      g.addColorStop(1,'rgba(0,229,160,0)');
+      ctx.beginPath();ctx.arc(f.x,f.y,rad,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+    }
   }
 
   addEventListener('mousemove',function(e){mouse.x=e.clientX;mouse.y=e.clientY;mouse.active=true;},{passive:true});
@@ -83,7 +118,7 @@
   function an(){
     ctx.clearRect(0,0,c.width,c.height);
     pts.forEach(function(p){p.up();p.dr();});
-    ln();drawRipples();
+    ln();drawRipples();drawFlashes();
     requestAnimationFrame(an);
   }
   if(!reduced)an();else pts.forEach(function(p){p.dr();});
