@@ -164,8 +164,18 @@
   addEventListener('mousemove',function(e){mouse.x=e.clientX;mouse.y=e.clientY;mouse.active=true;},{passive:true});
   document.addEventListener('mouseleave',function(){mouse.active=false;});
   addEventListener('touchmove',function(e){if(e.touches&&e.touches[0]){mouse.x=e.touches[0].clientX;mouse.y=e.touches[0].clientY;mouse.active=true;}},{passive:true});
-  addEventListener('click',function(e){spawnRipple(e.clientX,e.clientY);});
-  addEventListener('touchstart',function(e){if(e.touches&&e.touches[0])spawnRipple(e.touches[0].clientX,e.touches[0].clientY);},{passive:true});
+  // Mobile fires touchstart AND a synthetic click for the same tap; without
+  // this guard every tap spawned two overlapping ripples (touch never had
+  // this problem on desktop, which only ever gets a real click).
+  var lastSpawnAt=0;
+  function trySpawn(x,y){
+    var now=performance.now();
+    if(now-lastSpawnAt<350)return;
+    lastSpawnAt=now;
+    spawnRipple(x,y);
+  }
+  addEventListener('click',function(e){trySpawn(e.clientX,e.clientY);});
+  addEventListener('touchstart',function(e){if(e.touches&&e.touches[0])trySpawn(e.touches[0].clientX,e.touches[0].clientY);},{passive:true});
 
   function an(){
     ctx.clearRect(0,0,c.width,c.height);

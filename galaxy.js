@@ -129,6 +129,7 @@ function initGalaxy() {
 
         const pulse = 1 + Math.sin(animationTime * 2) * 0.1;
         coreGlows.primaryGlow.scale.set(3 * pulse, 3 * pulse, 1);
+        coreGlows.sunCore.scale.set(1.1 * pulse, 1.1 * pulse, 1);
 
         planetState.forEach(planet => {
             planet.angle += planet.speed * 0.008;
@@ -145,7 +146,7 @@ function initGalaxy() {
             planet.element.style.top = ((-worldPosition.y * 0.5 + 0.5) * height) + 'px';
             planet.element.style.display = worldPosition.z > 1 ? 'none' : '';
 
-            const depthFactor = Math.max(0.3, Math.min(1, 1 - ((planet.anchor.position.z - camera.position.z + 15) / 30)));
+            const depthFactor = Math.max(0.62, Math.min(1, 1 - ((planet.anchor.position.z - camera.position.z + 15) / 30)));
             planet.element.style.opacity = depthFactor;
             planet.element.style.transform = `translate(-50%,-50%) scale(${0.7 + depthFactor * 0.4})`;
         });
