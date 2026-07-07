@@ -66,13 +66,30 @@ export function createStarField(scene, density = 300) {
 
 export function createCoreGlow(scene) {
     const glowTexture = createGlowTexture(256, 'rgba(255,255,255,0.9)', 'rgba(0,229,160,0.35)');
+    const sunTexture = createGlowTexture(128, 'rgba(255,255,255,1)', 'rgba(180,255,225,0.9)');
+
+    // Bright solid-reading core so the center looks like an actual glowing
+    // sun, not just a soft blur. The two glow sprites below become its
+    // surrounding corona/bloom.
+    const sunCore = new THREE.Sprite(
+        new THREE.SpriteMaterial({
+            map: sunTexture,
+            color: 0xbfffe8,
+            transparent: true,
+            opacity: 1,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        })
+    );
+    sunCore.scale.set(1.1, 1.1, 1);
+    scene.add(sunCore);
 
     const primaryGlow = new THREE.Sprite(
         new THREE.SpriteMaterial({
             map: glowTexture,
             color: 0x00e5a0,
             transparent: true,
-            opacity: 0.35,
+            opacity: 0.55,
             blending: THREE.AdditiveBlending,
             depthWrite: false
         })
@@ -85,7 +102,7 @@ export function createCoreGlow(scene) {
             map: glowTexture,
             color: 0x00e5a0,
             transparent: true,
-            opacity: 0.15,
+            opacity: 0.28,
             blending: THREE.AdditiveBlending,
             depthWrite: false
         })
@@ -93,5 +110,5 @@ export function createCoreGlow(scene) {
     secondaryGlow.scale.set(5, 5, 1);
     scene.add(secondaryGlow);
 
-    return {primaryGlow, secondaryGlow};
+    return {sunCore, primaryGlow, secondaryGlow};
 }
