@@ -259,12 +259,42 @@
     }).join('');
   }
 
+  // Fallback visual for projects with no uploaded image: icon in a phone frame
   function mockup(p, small) {
-    var inner = p.imageUrl
-      ? '<img src="' + esc(p.imageUrl) + '" alt="' + esc(p.title) + '" class="app-shot">'
-      : '<div class="app-screen"><i class="' + esc(p.icon || 'fas fa-mobile-alt') + ' app-logo"></i>' +
-        '<div class="app-title">' + esc(p.title) + '</div><div class="app-sub">' + esc(p.tagline) + '</div></div>';
+    var inner = '<div class="app-screen"><i class="' + esc(p.icon || 'fas fa-mobile-alt') + ' app-logo"></i>' +
+      '<div class="app-title">' + esc(p.title) + '</div><div class="app-sub">' + esc(p.tagline) + '</div></div>';
     return '<div class="phone-mockup' + (small ? ' pm-small' : '') + '"><div class="phone-notch"></div>' + inner + '</div>';
+  }
+
+  // Clickable full-bleed image block used once a project has a real screenshot
+  function photoBlock(p) {
+    return '<div class="pt-photo" tabindex="0" role="button" aria-label="View full image of ' + esc(p.title) + '">' +
+      '<img src="' + esc(p.imageUrl) + '" alt="' + esc(p.title) + '" loading="lazy">' +
+      '<span class="pt-zoom-hint"><i class="fas fa-expand"></i></span></div>';
+  }
+
+  /* ---------- Full-image lightbox ---------- */
+
+  function refreshBodyScrollLock() {
+    var modal = document.getElementById('projModal');
+    var lb = document.getElementById('imgLightbox');
+    var locked = (modal && modal.classList.contains('open')) || (lb && lb.classList.contains('open'));
+    document.body.style.overflow = locked ? 'hidden' : '';
+  }
+  function openLightbox(url, alt) {
+    var lb = document.getElementById('imgLightbox');
+    if (!lb || !url) return;
+    var img = document.getElementById('lbImg');
+    img.src = url;
+    img.alt = alt || '';
+    lb.classList.add('open');
+    refreshBodyScrollLock();
+  }
+  function closeLightbox() {
+    var lb = document.getElementById('imgLightbox');
+    if (!lb) return;
+    lb.classList.remove('open');
+    refreshBodyScrollLock();
   }
 
   function renderProjects(projects) {
@@ -273,12 +303,14 @@
     var html = '<div class="pt-spine"><div class="pt-progress" id="ptProgress"></div></div>';
     projects.forEach(function (p, i) {
       var side = i % 2 === 0 ? 'left' : 'right';
+      var hasPhoto = !!p.imageUrl;
       html += '<div class="pt-item ' + side + '" data-idx="' + i + '">' +
         '<div class="pt-node"><i class="' + esc(p.icon || 'fas fa-mobile-alt') + '"></i></div>' +
         '<div class="pt-period">' + esc(p.period || '') + '</div>' +
-        '<div class="pt-card" tabindex="0" role="button" aria-label="View details of ' + esc(p.title) + '">' +
+        '<div class="pt-card' + (hasPhoto ? ' has-photo' : '') + '" tabindex="0" role="button" aria-label="View details of ' + esc(p.title) + '">' +
         (p.featured ? '<span class="pt-featured"><i class="fas fa-star"></i> Featured</span>' : '') +
-        '<div class="pt-preview" style="background:' + esc(p.gradient || '') + ';">' + mockup(p, true) +
+        '<div class="pt-preview' + (hasPhoto ? ' pt-preview-photo' : '') + '"' + (hasPhoto ? '' : ' style="background:' + esc(p.gradient || '') + ';"') + '>' +
+        (hasPhoto ? photoBlock(p) : mockup(p, true)) +
         '<span class="status-badge ' + esc(p.status || 'live') + '"><span class="status-dot"></span> ' + esc(p.statusText || '') + '</span></div>' +
         '<div class="pt-body"><h3>' + esc(p.title) + '</h3>' +
         '<p class="proj-platform">' + esc(p.platform) + '</p>' +
@@ -289,6 +321,18 @@
         '</div></div></div>';
     });
     wrap.innerHTML = html;
+
+    // clicking/activating the photo opens the full-image lightbox instead of
+    // the project detail modal (stopPropagation keeps the two independent)
+    wrap.querySelectorAll('.pt-photo').forEach(function (photoEl) {
+      function zoom(e) {
+        e.stopPropagation();
+        var img = photoEl.querySelector('img');
+        openLightbox(img.src, img.alt);
+      }
+      photoEl.addEventListener('click', zoom);
+      photoEl.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); zoom(e); } });
+    });
 
     // entrance animation
     var io = new IntersectionObserver(function (es) {
@@ -334,8 +378,21 @@
   function openProjectModal(p) {
     var modal = document.getElementById('projModal');
     if (!modal || !p) return;
-    modal.querySelector('.pm-preview').style.background = p.gradient || '';
-    modal.querySelector('.pm-preview .pm-mock').innerHTML = mockup(p);
+    var preview = modal.querySelector('.pm-preview');
+    var mock = modal.querySelector('.pm-mock');
+    var hasPhoto = !!p.imageUrl;
+    preview.classList.toggle('has-photo', hasPhoto);
+    if (hasPhoto) {
+      preview.style.background = '';
+      mock.className = 'pm-mock pm-photo';
+      mock.innerHTML = '<img src="' + esc(p.imageUrl) + '" alt="' + esc(p.title) + '">';
+      mock.onclick = function (e) { e.stopPropagation(); openLightbox(p.imageUrl, p.title); };
+    } else {
+      preview.style.background = p.gradient || '';
+      mock.className = 'pm-mock';
+      mock.innerHTML = mockup(p);
+      mock.onclick = null;
+    }
     modal.querySelector('.pm-badge').innerHTML = '<span class="status-badge ' + esc(p.status || 'live') + '"><span class="status-dot"></span> ' + esc(p.statusText || '') + '</span>';
     modal.querySelector('.pm-title').textContent = p.title;
     modal.querySelector('.pm-platform').textContent = p.platform || '';
@@ -344,19 +401,30 @@
     modal.querySelector('.pm-tech').innerHTML = (p.tech || []).map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('');
     modal.querySelector('.pm-links').innerHTML = storeLinks(p.links) || '<span class="pm-nolinks">Private client project — not publicly listed</span>';
     modal.classList.add('open');
-    document.body.style.overflow = 'hidden';
+    refreshBodyScrollLock();
   }
   function closeProjectModal() {
     var modal = document.getElementById('projModal');
     modal.classList.remove('open');
-    document.body.style.overflow = '';
+    refreshBodyScrollLock();
   }
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeProjectModal(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    var lb = document.getElementById('imgLightbox');
+    if (lb && lb.classList.contains('open')) { closeLightbox(); return; }
+    closeProjectModal();
+  });
   document.addEventListener('DOMContentLoaded', function () {
     var modal = document.getElementById('projModal');
-    if (!modal) return;
-    modal.addEventListener('click', function (e) { if (e.target === modal) closeProjectModal(); });
-    modal.querySelector('.pm-close').addEventListener('click', closeProjectModal);
+    if (modal) {
+      modal.addEventListener('click', function (e) { if (e.target === modal) closeProjectModal(); });
+      modal.querySelector('.pm-close').addEventListener('click', closeProjectModal);
+    }
+    var lb = document.getElementById('imgLightbox');
+    if (lb) {
+      lb.addEventListener('click', function (e) { if (e.target === lb) closeLightbox(); });
+      lb.querySelector('.lb-close').addEventListener('click', closeLightbox);
+    }
   });
 
   /* ---------- Render + refresh flow ---------- */
