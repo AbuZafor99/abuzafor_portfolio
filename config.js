@@ -3,6 +3,6 @@
 //   apiBase: 'https://abuzafor-portfolio-api.azurewebsites.net'
 // Leave it '' to run the site fully static from the bundled fallback data.
 window.SITE_CONFIG = {
-  apiBase: '',
+  apiBase: 'https://abuzafor-portfolio-api-hqfmdkbwdsfcagh3.centralindia-01.azurewebsites.net',
   githubUser: 'AbuZafor99',
 };
