@@ -21,12 +21,12 @@
     <nav id="navbar"><div class="nav-in">
         <a href="#hero" class="nav-logo">&lt;<span>Zafor</span>/&gt;</a>
         <ul class="nav-links">
-            <li><a href="#hero">Home</a></li><li><a href="#about">About</a></li><li><a href="#skills">Skills</a></li><li><a href="#projects">Projects</a></li><li><a href="#experience">Experience</a></li><li><a href="#contact">Contact</a></li>
+            <li><a href="#hero">Home</a></li><li><a href="#about">About</a></li><li><a href="#skills">Skills</a></li><li><a href="#projects">Projects</a></li><li><a href="#experience">Experience</a></li><li><a href="#github">GitHub</a></li><li><a href="#contact">Contact</a></li>
             <li><a href="#" class="nav-cv" id="navCvBtn"><i class="fas fa-download"></i> CV</a></li>
         </ul>
         <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
     </div></nav>
-    <div class="mob-menu" id="mobMenu"><a href="#hero">Home</a><a href="#about">About</a><a href="#skills">Skills</a><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#contact">Contact</a><a href="#" id="mobCvBtn"><i class="fas fa-download"></i> Download CV</a></div>
+    <div class="mob-menu" id="mobMenu"><a href="#hero">Home</a><a href="#about">About</a><a href="#skills">Skills</a><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#github">GitHub</a><a href="#contact">Contact</a><a href="#" id="mobCvBtn"><i class="fas fa-download"></i> Download CV</a></div>
 
     <!-- Hero Section -->
     <section id="hero"><div class="hero-inner">
@@ -37,7 +37,7 @@
             <p class="desc">Building and shipping production-ready iOS & Android applications with 3 live apps on the App Store and Play Store. Specialized in Dart/Flutter, Firebase, and end-to-end mobile development.</p>
             <div class="hero-btns"><a href="#projects" class="btn-p"><i class="fas fa-rocket"></i> View Projects</a><a href="#contact" class="btn-o"><i class="fas fa-paper-plane"></i> Get in Touch</a></div>
             <div class="hero-social">
-                <a href="https://github.com/abuzafor" target="_blank" rel="noopener"><i class="fab fa-github"></i></a>
+                <a href="https://github.com/AbuZafor99" target="_blank" rel="noopener"><i class="fab fa-github"></i></a>
                 <a href="https://linkedin.com/in/abuzafor" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
                 <a href="mailto:abuzafor.dev@gmail.com"><i class="fas fa-envelope"></i></a>
                 <a href="tel:+8801725722522"><i class="fas fa-phone"></i></a>
@@ -66,84 +66,41 @@
     <section id="about"><div class="sec-in">
         <div class="reveal"><p class="sec-label">About Me</p><h2 class="sec-title">Who I Am</h2><div class="sec-div"></div></div>
         <div class="about-grid">
-            <div class="about-text reveal">
-                <p>I'm a <span class="about-hl">Flutter Developer</span> with hands-on experience building and shipping cross-platform mobile applications live on the <span class="about-hl">Apple App Store</span> and <span class="about-hl">Google Play Store</span>.</p>
-                <p>Currently at <span class="about-hl">ScaleUp Ad Agency</span> under Betopia Group, serving international clients from requirements to release.</p>
-                <p><span class="about-hl">3 live production apps</span> and <span class="about-hl">1 open-source project</span> demonstrate my track record.</p>
-            </div>
-            <div class="about-details reveal">
-                <div class="ad-item"><div class="lbl">Location</div><div class="val">Dhaka, Bangladesh</div></div>
-                <div class="ad-item"><div class="lbl">Current Role</div><div class="val">Jr. Flutter Developer</div></div>
-                <div class="ad-item"><div class="lbl">Employer</div><div class="val">ScaleUp Ad Agency</div></div>
-                <div class="ad-item"><div class="lbl">Focus</div><div class="val">Cross-Platform Mobile</div></div>
-                <div class="ad-item"><div class="lbl">Stores</div><div class="val">App Store & Play Store</div></div>
-                <div class="ad-item"><div class="lbl">Languages</div><div class="val">English, Bangla</div></div>
-            </div>
+            <div class="about-text reveal" id="aboutText"></div>
+            <div class="about-details reveal" id="aboutDetails"></div>
         </div>
     </div></section>
 
     <!-- Skills Section -->
     <section id="skills"><div class="sec-in">
         <div class="reveal"><p class="sec-label">Technical Skills</p><h2 class="sec-title">My Toolkit</h2><div class="sec-div"></div></div>
-        <div class="skill-card-grid reveal">
-            <div class="skill-card" style="--skill-color:#02569B;--skill-glow:rgba(2,86,155,0.15);--skill-bg:rgba(2,86,155,0.1);--skill-bg-hover:rgba(2,86,155,0.2);"><div class="sk-icon-wrap"><i class="devicon-flutter-plain colored"></i></div><span class="sk-name">Flutter</span></div>
-            <div class="skill-card" style="--skill-color:#0175C2;--skill-glow:rgba(1,117,194,0.15);--skill-bg:rgba(1,117,194,0.1);--skill-bg-hover:rgba(1,117,194,0.2);"><div class="sk-icon-wrap"><i class="devicon-dart-plain colored"></i></div><span class="sk-name">Dart</span></div>
-            <div class="skill-card" style="--skill-color:#FFCA28;--skill-glow:rgba(255,202,40,0.15);--skill-bg:rgba(255,202,40,0.08);--skill-bg-hover:rgba(255,202,40,0.18);"><div class="sk-icon-wrap"><i class="devicon-firebase-plain colored"></i></div><span class="sk-name">Firebase</span></div>
-            <div class="skill-card" style="--skill-color:#8B5CF6;--skill-glow:rgba(139,92,246,0.15);--skill-bg:rgba(139,92,246,0.1);--skill-bg-hover:rgba(139,92,246,0.2);"><div class="sk-icon-wrap"><i class="devicon-flutter-plain" style="filter:hue-rotate(220deg) brightness(1.3);color:#8B5CF6;"></i></div><span class="sk-name">GetX</span></div>
-            <div class="skill-card" style="--skill-color:#3776AB;--skill-glow:rgba(55,118,171,0.15);--skill-bg:rgba(55,118,171,0.1);--skill-bg-hover:rgba(55,118,171,0.2);"><div class="sk-icon-wrap"><i class="devicon-python-plain colored"></i></div><span class="sk-name">Python</span></div>
-            <div class="skill-card" style="--skill-color:#F05032;--skill-glow:rgba(240,80,50,0.15);--skill-bg:rgba(240,80,50,0.1);--skill-bg-hover:rgba(240,80,50,0.2);"><div class="sk-icon-wrap"><i class="devicon-git-plain colored"></i></div><span class="sk-name">Git</span></div>
-            <div class="skill-card" style="--skill-color:#4479A1;--skill-glow:rgba(68,121,161,0.15);--skill-bg:rgba(68,121,161,0.1);--skill-bg-hover:rgba(68,121,161,0.2);"><div class="sk-icon-wrap"><i class="devicon-mysql-plain colored"></i></div><span class="sk-name">MySQL</span></div>
-            <div class="skill-card" style="--skill-color:#47A248;--skill-glow:rgba(71,162,72,0.15);--skill-bg:rgba(71,162,72,0.1);--skill-bg-hover:rgba(71,162,72,0.2);"><div class="sk-icon-wrap"><i class="devicon-mongodb-plain colored"></i></div><span class="sk-name">MongoDB</span></div>
-            <div class="skill-card" style="--skill-color:#E34F26;--skill-glow:rgba(227,79,38,0.15);--skill-bg:rgba(227,79,38,0.1);--skill-bg-hover:rgba(227,79,38,0.2);"><div class="sk-icon-wrap"><i class="devicon-html5-plain colored"></i></div><span class="sk-name">HTML</span></div>
-            <div class="skill-card" style="--skill-color:#1572B6;--skill-glow:rgba(21,114,182,0.15);--skill-bg:rgba(21,114,182,0.1);--skill-bg-hover:rgba(21,114,182,0.2);"><div class="sk-icon-wrap"><i class="devicon-css3-plain colored"></i></div><span class="sk-name">CSS</span></div>
-            <div class="skill-card" style="--skill-color:#F7DF1E;--skill-glow:rgba(247,223,30,0.15);--skill-bg:rgba(247,223,30,0.08);--skill-bg-hover:rgba(247,223,30,0.18);"><div class="sk-icon-wrap"><i class="devicon-javascript-plain colored"></i></div><span class="sk-name">JavaScript</span></div>
-        </div>
+        <div class="skill-card-grid reveal" id="skillGrid"></div>
     </div></section>
 
-    <!-- Projects Section -->
+    <!-- Projects Section: 3D vertical timeline -->
     <section id="projects"><div class="sec-in">
-        <div class="reveal"><p class="sec-label">Live Projects</p><h2 class="sec-title">What I've Built</h2><div class="sec-div"></div></div>
-        <div class="proj-featured reveal" data-tilt>
-            <div class="proj-preview"><div class="grad" style="background:linear-gradient(135deg,#0a2e1f 0%,#00e5a0 50%,#0a3d2e 100%);"></div><div class="phone-mockup"><div class="phone-notch"></div><div class="app-screen"><i class="fas fa-running app-logo"></i><div class="app-title">Tully Planner</div><div class="app-sub">Athlete Performance</div></div></div><span class="status-badge live"><span class="status-dot"></span> Live on App Store</span></div>
-            <div class="proj-info"><h3>Tully Planner</h3><p class="proj-platform">iOS — Athlete & Coach Performance Tracking</p><p>Performance tracking app for high schools and sports organizations with custom training programs and real-time dashboards.</p><ul class="proj-highlights"><li>Cross-platform performance tracking</li><li>Real-time data collection and dashboards</li><li>QR code-based data submission</li><li>Custom charts and data visualizations</li><li>Full Apple App Store deployment</li></ul><div class="proj-tech"><span>Flutter</span><span>Firebase</span><span>QR Codes</span><span>Charts</span></div><div class="store-links"><a href="https://apps.apple.com/us/app/tully-planner/id6759318137" target="_blank" rel="noopener" class="store-link apple"><i class="fab fa-apple"></i> App Store</a></div></div>
-        </div>
-        <div class="proj-row">
-            <div class="proj-card reveal" data-tilt>
-                <div class="proj-preview"><div class="grad" style="background:linear-gradient(135deg,#1a0a3d 0%,#7c4dff 50%,#0a1a3d 100%);"></div><div class="phone-mockup"><div class="phone-notch"></div><div class="app-screen"><i class="fas fa-trophy app-logo"></i><div class="app-title">Central Padel</div><div class="app-sub">League Manager</div></div></div><span class="status-badge live"><span class="status-dot"></span> iOS & Android</span></div>
-                <div class="proj-info"><h3>Central Padel League</h3><p class="proj-platform">Cross-Platform — Sports League Management</p><p>Sports league app with real-time schedules, live scores, standings, and player stats.</p><ul class="proj-highlights"><li>Real-time match schedules, scores & standings</li><li>Push notifications</li><li>Player & team profiles</li></ul><div class="proj-tech"><span>Flutter</span><span>Push Notifications</span><span>REST API</span></div><div class="store-links"><a href="https://apps.apple.com/us/app/central-padel-league/id6756258917" target="_blank" rel="noopener" class="store-link apple"><i class="fab fa-apple"></i> App Store</a><a href="https://play.google.com/store/apps/details?id=com.pooelcentraluser.karlfive" target="_blank" rel="noopener" class="store-link google"><i class="fab fa-google-play"></i> Play Store</a></div></div>
-            </div>
-            <div class="proj-card reveal" data-tilt>
-                <div class="proj-preview"><div class="grad" style="background:linear-gradient(135deg,#3d1a0a 0%,#ff9800 50%,#3d2a0a 100%);"></div><div class="phone-mockup"><div class="phone-notch"></div><div class="app-screen"><i class="fas fa-users app-logo"></i><div class="app-title">Beardfriends</div><div class="app-sub">Social Community</div></div></div><span class="status-badge live"><span class="status-dot"></span> UK App Store</span></div>
-                <div class="proj-info"><h3>Beardfriends</h3><p class="proj-platform">iOS — Social Community App</p><p>Social community app connecting users with shared interests with real-time chat.</p><ul class="proj-highlights"><li>Firebase Auth & Firestore real-time sync</li><li>Real-time chat and notifications</li></ul><div class="proj-tech"><span>Flutter</span><span>Firebase</span><span>Firestore</span></div><div class="store-links"><a href="https://apps.apple.com" target="_blank" rel="noopener" class="store-link apple"><i class="fab fa-apple"></i> App Store (UK)</a></div></div>
-            </div>
-            <div class="proj-card reveal" data-tilt>
-                <div class="proj-preview"><div class="grad" style="background:linear-gradient(135deg,#0a1a3d 0%,#0088e5 50%,#0a2a3d 100%);"></div><div class="phone-mockup"><div class="phone-notch"></div><div class="app-screen"><i class="fas fa-globe-americas app-logo"></i><div class="app-title">EarthQForecast</div><div class="app-sub">Seismic Monitor</div></div></div><span class="status-badge oss"><span class="status-dot"></span> Open Source</span></div>
-                <div class="proj-info"><h3>EarthQForecast</h3><p class="proj-platform">Flutter — Earthquake Monitoring</p><p>Real-time earthquake tracking with live seismic data APIs and interactive maps.</p><ul class="proj-highlights"><li>Live seismic data API integration</li><li>Interactive map rendering</li></ul><div class="proj-tech"><span>Flutter</span><span>REST API</span><span>Maps</span></div><div class="store-links"><a href="https://github.com/abuzafor" target="_blank" rel="noopener" class="store-link github"><i class="fab fa-github"></i> View Source</a></div></div>
-            </div>
-        </div>
+        <div class="reveal"><p class="sec-label">Live Projects</p><h2 class="sec-title">What I've Built</h2><div class="sec-div"></div><p class="pt-hint"><i class="fas fa-hand-pointer"></i> Click any project to see the full story</p></div>
+        <div class="pt-wrap" id="projTimeline"></div>
     </div></section>
 
     <!-- Experience Section -->
     <section id="experience"><div class="sec-in">
         <div class="reveal"><p class="sec-label">Experience</p><h2 class="sec-title">Where I've Worked</h2><div class="sec-div"></div></div>
-        <div class="timeline">
-            <div class="tl-item reveal"><div class="tl-dot active"></div><div class="tl-content"><div class="tl-head"><h3>Junior Flutter Developer</h3><span class="tl-date">Sep 2025 – Present</span></div><p class="tl-co">ScaleUp Ad Agency, Betopia Group</p><ul class="tl-list"><li>Develop and maintain cross-platform Flutter apps</li><li>REST API integration, Firebase, state management</li><li>App store submission and release management</li></ul></div></div>
-            <div class="tl-item reveal"><div class="tl-dot"></div><div class="tl-content"><div class="tl-head"><h3>App Development Instructor</h3><span class="tl-date">Jul 2025 – Dec 2025</span></div><p class="tl-co">Independent University, Bangladesh (IUB)</p><ul class="tl-list"><li>Designed and delivered Flutter development curriculum</li><li>Evaluated projects and provided technical feedback</li></ul></div></div>
-            <div class="tl-item reveal"><div class="tl-dot"></div><div class="tl-content"><div class="tl-head"><h3>Teaching Assistant — Physics Lab</h3><span class="tl-date">2023 – 2025</span></div><p class="tl-co">Independent University, Bangladesh (IUB)</p><ul class="tl-list"><li>Supervised lab sessions and maintained records</li></ul></div></div>
-        </div>
+        <div class="timeline" id="expTimeline"></div>
     </div></section>
 
     <!-- Education Section -->
     <section id="education"><div class="sec-in">
         <div class="reveal"><p class="sec-label">Education</p><h2 class="sec-title">Academic Background</h2><div class="sec-div"></div></div>
-        <div class="edu-card reveal"><div class="edu-head"><h3>B.Sc. in Computer Science & Engineering</h3><span class="cgpa"><i class="fas fa-star"></i> CGPA: 3.62 / 4.00</span></div><p style="color:var(--muted);">Independent University, Bangladesh (IUB)</p><div class="edu-det"><div class="edu-d"><i class="fas fa-calendar"></i> 2022 – 2025</div><div class="edu-d"><i class="fas fa-book"></i> Minor: MIS</div></div></div>
+        <div id="eduList"></div>
         <div style="margin-top:4rem;"><div class="reveal"><p class="sec-label">Certifications</p><h2 class="sec-title" style="font-size:1.8rem;">Credentials</h2><div class="sec-div"></div></div>
-        <div class="certs-grid">
-            <div class="cert-item reveal"><div class="cert-ic"><i class="fas fa-certificate"></i></div><div class="cert-info"><h4>Complete Flutter App Development Career Path</h4><span>2025</span></div></div>
-            <div class="cert-item reveal"><div class="cert-ic"><i class="fas fa-network-wired"></i></div><div class="cert-info"><h4>CCNA: Introduction to Networks — Cisco / IUB</h4><span>2023</span></div></div>
-            <div class="cert-item reveal"><div class="cert-ic"><i class="fab fa-github"></i></div><div class="cert-info"><h4>Master Git & GitHub — Udemy</h4><span>2023</span></div></div>
-            <div class="cert-item reveal"><div class="cert-ic"><i class="fas fa-brain"></i></div><div class="cert-info"><h4>Python for Data Science, AI & Development — Coursera</h4><span>2022</span></div></div>
-        </div></div>
+        <div class="certs-grid" id="certGrid"></div></div>
+    </div></section>
+
+    <!-- GitHub Activity Section -->
+    <section id="github"><div class="sec-in">
+        <div class="reveal"><p class="sec-label">GitHub Activity</p><h2 class="sec-title">Open Source & Code</h2><div class="sec-div"></div></div>
+        <div id="ghContent" class="gh-content"><div class="gh-loading"><i class="fas fa-spinner fa-spin"></i> Loading GitHub activity...</div></div>
     </div></section>
 
     <!-- Contact Section -->
@@ -153,9 +110,9 @@
             <div class="contact-info reveal">
                 <h3>Get in Touch</h3><p>Open to new projects, ideas, or opportunities.</p>
                 <div class="contact-links">
-                    <a href="mailto:abuzafor.dev@gmail.com" class="cl-item"><i class="fas fa-envelope"></i><div><div class="cl-lbl">Email</div><div class="cl-val">abuzafor.dev@gmail.com</div></div></a>
-                    <a href="tel:+8801725722522" class="cl-item"><i class="fas fa-phone"></i><div><div class="cl-lbl">Phone</div><div class="cl-val">+880 1725 722 522</div></div></a>
-                    <a href="#" class="cl-item"><i class="fas fa-map-marker-alt"></i><div><div class="cl-lbl">Location</div><div class="cl-val">Dhaka, Bangladesh</div></div></a>
+                    <a href="mailto:abuzafor.dev@gmail.com" class="cl-item" id="contactEmail"><i class="fas fa-envelope"></i><div><div class="cl-lbl">Email</div><div class="cl-val">abuzafor.dev@gmail.com</div></div></a>
+                    <a href="tel:+8801725722522" class="cl-item" id="contactPhone"><i class="fas fa-phone"></i><div><div class="cl-lbl">Phone</div><div class="cl-val">+880 1725 722 522</div></div></a>
+                    <a href="#" class="cl-item" id="contactLocation"><i class="fas fa-map-marker-alt"></i><div><div class="cl-lbl">Location</div><div class="cl-val">Dhaka, Bangladesh</div></div></a>
                 </div>
             </div>
             <div class="c-form reveal">
@@ -170,7 +127,23 @@
         </div>
     </div></section>
 
-    <footer><div class="ft-in"><div class="ft-text">Designed & Built by <span class="acc">MD Abu Zafor</span> &copy; 2025</div><div class="ft-social"><a href="https://github.com/abuzafor" target="_blank" rel="noopener"><i class="fab fa-github"></i></a><a href="https://linkedin.com/in/abuzafor" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a><a href="mailto:abuzafor.dev@gmail.com"><i class="fas fa-envelope"></i></a></div></div></footer>
+    <footer><div class="ft-in"><div class="ft-text">Designed & Built by <span class="acc">MD Abu Zafor</span> &copy; 2025</div><div class="ft-social"><a href="https://github.com/AbuZafor99" target="_blank" rel="noopener"><i class="fab fa-github"></i></a><a href="https://linkedin.com/in/abuzafor" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a><a href="mailto:abuzafor.dev@gmail.com"><i class="fas fa-envelope"></i></a></div></div></footer>
+
+    <!-- Project Detail Modal -->
+    <div class="proj-modal" id="projModal" role="dialog" aria-modal="true">
+        <div class="pm-dialog">
+            <button class="pm-close" aria-label="Close"><i class="fas fa-times"></i></button>
+            <div class="pm-preview"><div class="pm-mock"></div><div class="pm-badge"></div></div>
+            <div class="pm-info">
+                <h3 class="pm-title"></h3>
+                <p class="proj-platform pm-platform"></p>
+                <p class="pm-desc"></p>
+                <ul class="proj-highlights pm-highlights"></ul>
+                <div class="proj-tech pm-tech"></div>
+                <div class="store-links pm-links"></div>
+            </div>
+        </div>
+    </div>
 
     <div class="toast" id="toast"></div>
     <div class="skill-popup" id="skillPopup"><h4 id="popTitle"></h4><p id="popDesc"></p></div>
@@ -179,8 +152,11 @@
     <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
     
     <!-- Scripts -->
+    <script src="config.js"></script>
     <script type="module" src="galaxy.js"></script>
+    <script src="site-data.js" defer></script>
     <script src="script.js" defer></script>
+    <script src="github-section.js" defer></script>
     <script src="resume.js" defer></script>
     <script src="contact.js" defer></script>
 </body>

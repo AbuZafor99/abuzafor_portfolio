@@ -18,9 +18,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
         showToast('Downloading your CV...');
 
         try {
-            // Create a hidden link element and trigger download
+            // Prefer the CV uploaded via the admin portal; fall back to the bundled PDF
+            var cvUrl = (window.SITE_DATA && window.SITE_DATA.profile && window.SITE_DATA.profile.cvUrl) || 'Abu_Zafor_CV_FlutterDeveloper.pdf';
             var link = document.createElement('a');
-            link.href = 'Abu_Zafor_CV_FlutterDeveloper.pdf';
+            link.href = cvUrl;
             link.download = 'Abu_Zafor_CV_FlutterDeveloper.pdf';
             document.body.appendChild(link);
             link.click();
