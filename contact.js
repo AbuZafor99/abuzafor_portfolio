@@ -30,10 +30,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
         statusEl.className = 'form-status';
         statusEl.style.display = 'none';
 
+        // Mirror the submission to the backend so it shows up in the admin
+        // dashboard too. Best-effort: never blocks or affects the EmailJS flow.
+        var apiBase = (window.SITE_CONFIG && window.SITE_CONFIG.apiBase) || '';
+        if (apiBase) {
+            fetch(apiBase + '/api/messages', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: name, email: email, subject: subject, message: message }),
+            }).catch(function () { /* admin mirror is best-effort only */ });
+        }
+
         // Send via Email.js
         const now = new Date();
         const time = now.toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-        
+
         emailjs.send('service_rscux7f', 'template_44cnnuz', {
             from_name: name,
             from_email: email,
